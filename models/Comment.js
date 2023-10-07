@@ -14,7 +14,6 @@ Comment.init(
     },
     text: {
       type: DataTypes.TEXT,
-      allowNull: false,
     },
   },
   {
