@@ -1,14 +1,9 @@
-// import important parts of sequelize library
 const { Model, DataTypes } = require('sequelize');
-
-// import our database connection from config.js
 const sequelize = require('../config/connection.js');
 
-// Initialize Category model (table) by extending off Sequelize's Model class
-class Category extends Model { }
+class User extends Model { }
 
-// set up fields and rules for Category model
-Category.init(
+User.init(
   {
     // Define columns
     id: {
@@ -17,19 +12,23 @@ Category.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    category_name: {
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     freezeTableName: true,
     underscored: true,
-    modelName: 'category',
+    modelName: 'user',
   }
 );
 
-module.exports = Category;
-
+module.exports = User;
