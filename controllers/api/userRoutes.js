@@ -1,128 +1,65 @@
 const router = require('express').Router();
 const { User } = require('../../models');
 
-// The `/api/users` endpoint
-
-// GET all Users
-router.get('/', async (req, res) => {
+// Route for creating a new user
+router.post('/', async (req, res) => {
   try {
-    const userData = await User.findAll({
-      // include: [
-      //   { model: Category, attributes: ['id', 'category_name'] },
-      //   { model: Tag, attributes: ['id', 'tag_name'] },
-      // ]
+    const userData = await User.create(req.body);
+
+    // Set the user session data upon successful user creation
+    req.session.save(() => {
+      req.session.user_id = userData.id;
+      req.session.logged_in = true;
+
+      res.status(200).json(userData);
     });
-    res.status(200).json(userData);
   } catch (err) {
-    res.status(500).json(err)
+    res.status(400).json(err);
   }
 });
 
-// // GET one User
-// router.get('/:id', async (req, res) => {
-//   try {
-//     const productData = await Product.findByPk(req.params.id, {
-//       include: [
-//         { model: Category, attributes: ['id', 'category_name'] },
-//         { model: Tag, attributes: ['id', 'tag_name'] },
-//       ]
-//     });
-//     if (!productData) {
-//       res.status(404).json({ message: 'No Product found with this id' });
-//       return;
-//     }
-//     res.status(200).json(productData);
-//   } catch (err) {
-//     res.status(500).json(err)
-//   }
-// });
+// Route for user login
+router.post('/login', async (req, res) => {
+  try {
+    const userData = await User.findOne({ where: { username: req.body.username } });
 
-// // POST/Create new User
-// router.post('/', async (req, res) => {
-//   try {
-//     // Create the product using Product model and req.body
-//     const productData = await Product.create(req.body);
-//     if (req.body.tagIds) {
-//       // Create an array of product-tag associations
-//       const productTagIdArr = req.body.tagIds.map((tag_id) => {
-//         return {
-//           product_id: productData.id,
-//           tag_id,
-//         };
-//       });
-//       await ProductTag.bulkCreate(productTagIdArr);
-//     }
+    if (!userData) {
+      // Return an error if the user is not found
+      res.status(400).json({ message: 'Incorrect username or password, please try again' });
+      return;
+    }
 
-//     // Respond with the created product
-//     res.status(200).json(productData);
-//   } catch (err) {
-//     console.log(err);
-//     res.status(400).json(err);
-//   }
-// });
+    const validPassword = await userData.checkPassword(req.body.password);
 
-// // PUT/Update one User
-// router.put('/:id', async (req, res) => {
-//   try {
-//     // Find the product by its ID
-//     const productData = await Product.findByPk(req.params.id);
+    if (!validPassword) {
+      // Return an error if the password is incorrect
+      res.status(400).json({ message: 'Incorrect username or password, please try again' });
+      return;
+    }
 
-//     // Check if the tag exists
-//     if (!productData) {
-//       res.status(404).json({ message: 'No product found with this id' });
-//       return;
-//     }
+    // Set the user session data upon successful login
+    req.session.save(() => {
+      req.session.user_id = userData.id;
+      req.session.logged_in = true;
 
-//     // Update product data
-//     const updatedProduct = await productData.update(req.body);
+      res.json({ user: userData, message: 'You are now logged in!' });
+    });
 
-//     // Handle product tags
-//     if (req.body.tagIds && req.body.tagIds.length) {
-//       const currentProductTags = await ProductTag.findAll({
-//         where: { product_id: req.params.id },
-//       });
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
 
-//       const currentTagIds = currentProductTags.map(({ tag_id }) => tag_id);
-//       const newTagIds = req.body.tagIds.filter((tag_id) => !currentTagIds.includes(tag_id));
-//       const tagsToRemove = currentProductTags.filter(({ tag_id }) => !req.body.tagIds.includes(tag_id));
-
-//       // Remove tags that are no longer associated
-//       await ProductTag.destroy({ where: { id: tagsToRemove.map(({ id }) => id) } });
-
-//       // Add new tags
-//       const newProductTags = newTagIds.map((tag_id) => {
-//         return {
-//           product_id: req.params.id,
-//           tag_id,
-//         };
-//       });
-
-//       await ProductTag.bulkCreate(newProductTags);
-//     }
-
-//     res.status(200).json(updatedProduct);
-//   } catch (err) {
-//     console.log(err);
-//     res.status(400).json(err);
-//   }
-// });
-
-// // DEL/Delete one User
-// router.delete('/:id', async (req, res) => {
-//   try {
-//     const productData = await Product.destroy({
-//       where: {
-//         id: req.params.id,
-//       },
-//     });
-//     if (!productData) {
-//       res.status(404).json({ message: 'No Product with this id' });
-//       return;
-//     }
-//     res.status(200).json({ message: 'Category and associated products have been deleted' });
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+// Route for user logout
+router.post('/logout', (req, res) => {
+  if (req.session.logged_in) {
+    // Destroy the session to log the user out
+    req.session.destroy(() => {
+      res.status(204).end();
+    });
+  } else {
+    res.status(404).end();
+  }
+});
 
 module.exports = router;
