@@ -23,19 +23,12 @@ router.get('/', async (req, res) => {
 // GET one Comment
 router.get('/:id', async (req, res) => {
   try {
-    const tagData = await Tag.findByPk(req.params.id, {
-      include: [
-        {
-          model: Product,
-          attributes: ['id', 'product_name'],
-        }
-      ]
-    });
-    if (!tagData) {
-      res.status(404).json({ message: 'No tag found with this id' });
+    const commentData = await Comment.findByPk(req.params.id);
+    if (!commentData) {
+      res.status(404).json({ message: 'No Comment found with this id' });
       return;
     }
-    res.status(200).json(tagData)
+    res.status(200).json(commentData)
   } catch (err) {
     res.status(500).json(err)
   }
@@ -44,8 +37,8 @@ router.get('/:id', async (req, res) => {
 // // POST/Create new Comment
 // router.post('/', async (req, res) => {
 //   try {
-//     const tagData = await Tag.create(req.body);
-//     res.status(200).json(tagData);
+//     const commentData = await Comment.create(req.body);
+//     res.status(200).json(commentData);
 //   } catch (error) {
 //     console.log(err);
 //     res.status(500).json(error);
@@ -55,49 +48,49 @@ router.get('/:id', async (req, res) => {
 // // PUT/Update one Comment
 // router.put('/:id', async (req, res) => {
 //   try {
-//     // Find the tag by its ID
-//     const tagToUpdate = await Tag.findByPk(req.params.id, {
+//     // Find the Comment by its ID
+//     const CommentToUpdate = await Comment.findByPk(req.params.id, {
 //       include: [
 //         {
 //           model: Product,
 //           attributes: ['id'],
-//           through: ProductTag,
+//           through: ProductComment,
 //         },
 //       ],
 //     });
 
-//     // Check if the tag exists
-//     if (!tagToUpdate) {
-//       res.status(404).json({ message: 'No tag found with this id' });
+//     // Check if the Comment exists
+//     if (!CommentToUpdate) {
+//       res.status(404).json({ message: 'No Comment found with this id' });
 //       return;
 //     }
 
-//     // Update the tag's name
-//     if (req.body.tag_name) {
-//       tagToUpdate.tag_name = req.body.tag_name;
-//       await tagToUpdate.save();
+//     // Update the Comment's name
+//     if (req.body.Comment_name) {
+//       CommentToUpdate.Comment_name = req.body.Comment_name;
+//       await CommentToUpdate.save();
 //     }
 
 //     // Update associated products if product IDs are provided in the request body
 //     if (req.body.products && Array.isArray(req.body.products)) {
-//       // Get the IDs of products associated with the tag before the update
-//       const previousProductIds = tagToUpdate.Products.map((product) => product.id);
-//       await tagToUpdate.setProducts(req.body.products);
+//       // Get the IDs of products associated with the Comment before the update
+//       const previousProductIds = CommentToUpdate.Products.map((product) => product.id);
+//       await CommentToUpdate.setProducts(req.body.products);
 
-//       // Remove products from the database that are no longer associated with the tag
+//       // Remove products from the database that are no longer associated with the Comment
 //       const productsToRemoveIds = previousProductIds.filter(
 //         (productId) => !req.body.products.includes(productId)
 //       );
-//       await ProductTag.destroy({
+//       await ProductComment.destroy({
 //         where: {
-//           tag_id: tagToUpdate.id,
+//           Comment_id: CommentToUpdate.id,
 //           product_id: productsToRemoveIds,
 //         },
 //       });
 //     }
 
-//     // Respond with the updated tag data, including associated products
-//     res.status(200).json(tagToUpdate);
+//     // Respond with the updated Comment data, including associated products
+//     res.status(200).json(CommentToUpdate);
 //   } catch (error) {
 //     console.error(error);
 //     res.status(500).json(error);
@@ -107,13 +100,13 @@ router.get('/:id', async (req, res) => {
 // // DEL/Delete one Comment
 // router.delete('/:id', async (req, res) => {
 //   try {
-//     const productData = await Tag.destroy({
+//     const productData = await Comment.destroy({
 //       where: {
 //         id: req.params.id,
 //       },
 //     });
 //     if (!productData) {
-//       res.status(404).json({ message: 'No Tag with this id' });
+//       res.status(404).json({ message: 'No Comment with this id' });
 //       return;
 //     }
 //     res.status(200).json({ message: 'Category and associated products have been deleted' });

@@ -3,7 +3,7 @@ const Handlebars = require('handlebars');
 Handlebars.registerHelper('navMenu', (loggedIn) => {
     if (loggedIn) {
         return `
-      <li><a href="/">Home</a></li>
+      <li><a href="/dashboard">Dashboard</a></li>
     `;
     } else {
         return `

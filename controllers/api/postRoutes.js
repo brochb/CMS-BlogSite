@@ -6,14 +6,7 @@ const { Post } = require('../../models');
 // GET all Posts
 router.get('/', async (req, res) => {
   try {
-    const postData = await Post.findAll({
-      // include: [
-      //   {
-      //     model: Product,
-      //     attributes: ['id', 'product_name', 'price', 'stock'],
-      //   },
-      // ],
-    });
+    const postData = await Post.findAll();
     res.status(200).json(postData);
   } catch (error) {
     console.error(error);

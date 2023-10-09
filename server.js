@@ -10,7 +10,9 @@ const sequelize = require('./config/connection');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const hbs = exphbs.create({ helpers });
+
+
+const hbs = exphbs.create({ helpers, defaultLayout: 'main' });
 
 // const sess = {
 //   secret: 'Super secret secret',
@@ -29,14 +31,17 @@ const hbs = exphbs.create({ helpers });
 
 // app.use(session(sess));
 
+
 // Inform Express.js on which template engine to use
+
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views'));
+app.set('layoutDir', path.join(__dirname, 'views/layouts'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-// app.set('views', path.join(__dirname, 'views'));
 
 
 app.use(routes);
