@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const sequalize = require('../config/connection')
 const { Comment, User } = require('../models');
-const withAuth = require('../utils/middleware/auth');
+// const withAuth = require('../utils/middleware/auth');
 
 // Route for the homepage
 router.get('/', async (req, res) => {
