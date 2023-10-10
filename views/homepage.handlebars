@@ -1,22 +1,21 @@
-<!-- Loop over each object in the comments array -->
-{{#each coments as |comment| }}
-<div class="row mb-4 comment">
-    <div class="col-md-5">
-        <h2>
-            <a href="/comment/{{comment.id}}">{{comment.name}}</a>
-        </h2>
-        <p>
-            <span for="img" aria-label="money">💲</span>
-            <!-- Pass needed_funding value to the helper function -->
-            <span class="dollar-amount">{{format_amount comment.needed_funding}}</span>
-            needed!
-        </p>
-        <p>Created by {{comment.user.name}} on {{format_date comment.date_created}}</p>
-    </div>
-    <div class="col-md-7">
-        <p>
-            {{comment.description}}
-        </p>
-    </div>
-</div>
-{{/each}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home - The Tech Blog</title>
+</head>
+
+<body>
+    {{> navbar}}
+
+
+    <h1>Welcome to The Tech Blog</h1>
+
+    <!-- Include Handlebars library -->
+    <script src="handlebars.js"></script>
+
+    <!-- Your Handlebars template goes here -->
+    <script id="homepage-template" type="text/x-handlebars-template"></script>
+</body>
+
+</html>

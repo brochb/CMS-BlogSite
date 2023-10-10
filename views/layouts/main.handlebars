@@ -2,51 +2,18 @@
 <html>
 
 <head>
-    <title>Sample Page</title>
+    <title>The Tech Blog</title>
 </head>
 
 <body>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/dashboard">Dashboard</a></li>
-            {{{navMenu loggedIn}}}
-        </ul>
-    </nav>
+    {{> navbar}}
 
-    <section>
-        <!-- This is where you can add your cards later -->
-    </section>
 
     <!-- Include Handlebars library -->
     <script src="handlebars.js"></script>
 
     <!-- Your Handlebars template goes here -->
-    <script id="card-template" type="text/x-handlebars-template">
-        <!-- Example card template -->
-    <div class="card">
-        <h2>{{cardTitle}}</h2>
-        <p>{{cardContent}}</p>
-    </div>
-    </script>
-
-    <!-- Your JavaScript to render the cards using Handlebars goes here -->
-    <script>
-        // Sample data for a card (replace with your data)
-        var cardData = {
-            cardTitle: "Card Title",
-            cardContent: "This is the card content."
-        };
-
-        // Get the Handlebars template
-        var source = document.getElementById("card-template").innerHTML;
-
-        // Compile the Handlebars template
-        var template = Handlebars.compile(source);
-
-        // Render the card with data into the section
-        document.querySelector("section").innerHTML = template(cardData);
-    </script>
+    <script id="card-template" type="text/x-handlebars-template"></script>
 </body>
 
 </html>

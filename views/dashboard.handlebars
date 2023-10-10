@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard - The Tech Blog</title>
+</head>
+
+<body>
+    {{> navbar}}
+
+    <h1>Welcome to Your Dashboard</h1>
+
+    <!-- Create a New Comment Form -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h3>Create a New Comment:</h3>
+
+            <form class="form new-comment-form">
+                <div class="form-group">
+                    <label for="comment-text">Comment:</label>
+                    <textarea class="form-input" id="comment-text" name="comment-text"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Create Comment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comment List -->
+    <div class="row mt-4">
+        <div class="col-md-6 comment-list">
+            <h3>Your Comments:</h3>
+
+            {{#if comments.length}}
+            {{#each comments as |comment|}}
+            <div class="row mb-2">
+                <div class="col-md-8">
+                    <p>{{comment.text}}</p>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-sm btn-danger" data-id="{{comment.id}}">DELETE</button>
+                </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <p>You have no comments yet.</p>
+            {{/if}}
+        </div>
+    </div>
+
+    <!-- Include Handlebars library -->
+    <script src="handlebars.js"></script>
+
+    <!-- Your Handlebars template goes here -->
+    <script id="dashboard-template" type="text/x-handlebars-template"></script>
+</body>
+
+</html>
