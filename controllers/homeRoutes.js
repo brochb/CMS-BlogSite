@@ -1,5 +1,4 @@
 const router = require('express').Router();
-// const sequalize = require('../config/connection')
 const { Comment, User } = require('../models');
 const withAuth = require('../utils/middleware/auth');
 
@@ -40,7 +39,8 @@ router.get('/login', (req, res) => {
   //   } else {
       // Render the login page
       res.render('login', {
-        layout: false,
+        layout: 'main',
+        // layout: false,
       });
   //   }
   // } catch (error) {
@@ -51,26 +51,27 @@ router.get('/login', (req, res) => {
 });
 
 
-// Route for the dashboard page (protected with withAuth middleware)
-// router.get('/dashboard', withAuth, async (req, res) => {
-//   try {
-//     // Find the logged-in user based on the session ID
-//     const userData = await User.findByPk(req.session.user_id, {
-//       attributes: { exclude: ['password'] },
-//       include: [{ model: Comment }],
-//     });
+// Route for the dashboard page (protected without withAuth middleware)
+router.get('/dashboard', async (req, res) => {
+  try {
+    // Find the logged-in user based on the session ID
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Comment }],
+    });
 
-//     // Serialize user data
-//     const user = userData.get({ plain: true });
+    // Serialize user data
+    const user = userData.get({ plain: true });
 
-//     // Pass serialized user data and session flag into the dashboard template
-//     res.render('dashboard', {
-//       ...user,
-//       logged_in: true,
-//     });
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+    // Pass serialized user data and session flag into the dashboard template
+    res.render('dashboard', {
+      layout: false,
+      ...user,
+      logged_in: true,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;
